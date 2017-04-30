@@ -22,17 +22,18 @@ public class PlayerChat : NetworkBehaviour
     {
         base.OnStartLocalPlayer();
 
-        playerColor = new Color( Random.Range( 0, 256 ) / 256f, Random.Range( 0, 256 ) / 256f, Random.Range( 0, 256 ) / 256f );
-
-        text.text = "Client " + playerControllerId + " joined chat... say hello! \n";
-        text.color = playerColor;
-
         Debug.Log( "Local Player" );
     }
 
     public override void OnStartClient()
     {
         base.OnStartClient();
+
+        playerColor = new Color( Random.Range( 0, 256 ) / 256f, Random.Range( 0, 256 ) / 256f, Random.Range( 0, 256 ) / 256f );
+
+        CmdSendChatMessage( "Client " + playerControllerId + " joined chat... say hello! \n" );
+        text.text = "";
+        text.color = playerColor;
 
         sendButton.onClick.AddListener( OnSendButton );
 
@@ -49,7 +50,7 @@ public class PlayerChat : NetworkBehaviour
 
     void Update()
     {
-        if ( !isLocalPlayer )
+        if ( !isClient )
         {
             return;
         }
@@ -66,11 +67,11 @@ public class PlayerChat : NetworkBehaviour
         if ( !string.IsNullOrEmpty( inMessage ) )
         {
             RpcReceiveMessage( inMessage );
-        }
 
-        if ( isServer )
-        {
-            Debug.Log( "Received Message " + inMessage );
+            if ( isServer )
+            {
+                Debug.Log( "Received Message " + inMessage );
+            }
         }
     }
 
