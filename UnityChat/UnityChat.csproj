@@ -78,8 +78,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Code\Chat.cs" />
     <Compile Include="Assets\Code\PlayerChat.cs" />
+    <Compile Include="Assets\Code\UIChat.cs" />
+    <Compile Include="Assets\Code\UIChatEntry.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

@@ -10,7 +10,7 @@ public class PlayerChat : NetworkBehaviour
     public Text text = null;
     public Button sendButton = null;
 
-    Color playerColor = new Color();
+    public Color playerColor = new Color();
 
     public override void OnStartServer()
     {
