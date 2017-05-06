@@ -11,10 +11,11 @@ public class PlayerChat : NetworkBehaviour
     public Button sendButton = null;
 
     public Color playerColor = new Color();
-
+    UIChat chat = null;
     public override void OnStartServer()
     {
         base.OnStartServer();
+
         Debug.Log( "Server" );
     }
 
@@ -37,6 +38,8 @@ public class PlayerChat : NetworkBehaviour
 
         sendButton.onClick.AddListener( OnSendButton );
 
+        chat = FindObjectOfType<UIChat>();
+
         Debug.Log( "Client" );
     }
 
@@ -50,7 +53,7 @@ public class PlayerChat : NetworkBehaviour
 
     void Update()
     {
-        if ( !isClient )
+        if ( !isLocalPlayer )
         {
             return;
         }
@@ -78,6 +81,7 @@ public class PlayerChat : NetworkBehaviour
     [ClientRpcAttribute]
     private void RpcReceiveMessage( string inMessage )
     {
-        text.text += inMessage + "\n";
+        chat.CreateChatEntry( inMessage );
+        //text.text += inMessage + "\n";
     }
 }

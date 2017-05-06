@@ -8,9 +8,9 @@ public class UIChatEntry : MonoBehaviour
     public Text chatText = null;
     public Image backing = null;
 
-    public void ShowMessage(Color inBackingColor, string inText)
+    public void ShowMessage( string inText)
     {
         chatText.text = inText;
-        backing.color = inBackingColor;
+        //backing.color = inBackingColor;
     }
 }
