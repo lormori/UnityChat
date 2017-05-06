@@ -6,12 +6,11 @@ using UnityEngine.Networking;
 
 public class PlayerChat : NetworkBehaviour
 {
-    public InputField input = null;
-    public Text text = null;
-    public Button sendButton = null;
-
+    [SyncVar]
     public Color playerColor = new Color();
+
     UIChat chat = null;
+
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -19,36 +18,32 @@ public class PlayerChat : NetworkBehaviour
         Debug.Log( "Server" );
     }
 
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
-
-        Debug.Log( "Local Player" );
-    }
-
     public override void OnStartClient()
     {
         base.OnStartClient();
 
-        playerColor = new Color( Random.Range( 0, 256 ) / 256f, Random.Range( 0, 256 ) / 256f, Random.Range( 0, 256 ) / 256f );
-
-        CmdSendChatMessage( "Client " + playerControllerId + " joined chat... say hello! \n" );
-        text.text = "";
-        text.color = playerColor;
-
-        sendButton.onClick.AddListener( OnSendButton );
-
         chat = FindObjectOfType<UIChat>();
+        chat.sendButton.onClick.AddListener( OnSendButton );
+        playerColor = new Color( Random.Range( 0, 256 ) / 256f, Random.Range( 0, 256 ) / 256f, Random.Range( 0, 256 ) / 256f );
 
         Debug.Log( "Client" );
     }
 
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+        CmdSendChatMessage( "Client " + playerControllerId + " joined chat... say hello! \n" );
+
+        Debug.Log( "Local Player" );
+    }
+
     private void OnSendButton()
     {
-        CmdSendChatMessage( input.text );
-        input.text = string.Empty;
-        input.Select();
-        input.ActivateInputField();
+        CmdSendChatMessage( chat.input.text );
+        chat.input.text = string.Empty;
+        chat.input.Select();
+        chat.input.ActivateInputField();
     }
 
     void Update()
@@ -69,19 +64,16 @@ public class PlayerChat : NetworkBehaviour
     {
         if ( !string.IsNullOrEmpty( inMessage ) )
         {
-            RpcReceiveMessage( inMessage );
+            chat.CreateChatEntry( inMessage, playerColor );
+            //RpcReceiveMessage( inMessage, playerColor );
 
-            if ( isServer )
-            {
-                Debug.Log( "Received Message " + inMessage );
-            }
+            Debug.Log( "Received Message " + inMessage );
         }
     }
 
     [ClientRpcAttribute]
-    private void RpcReceiveMessage( string inMessage )
+    private void RpcReceiveMessage( string inMessage, Color inPlayerColor )
     {
-        chat.CreateChatEntry( inMessage );
-        //text.text += inMessage + "\n";
+        chat.CreateChatEntry( inMessage, playerColor );
     }
 }
