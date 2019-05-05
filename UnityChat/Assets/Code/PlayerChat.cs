@@ -42,8 +42,6 @@ public class PlayerChat : NetworkBehaviour
     {
         CmdSendChatMessage( chat.input.text );
         chat.input.text = string.Empty;
-        chat.input.Select();
-        chat.input.ActivateInputField();
     }
 
     void Update()
