@@ -10,14 +10,7 @@ public class PlayerChat : NetworkBehaviour
     public Color playerColor = new Color();
 
     UIChat chat = null;
-
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-
-        Debug.Log( "Server" );
-    }
-
+    
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -28,12 +21,12 @@ public class PlayerChat : NetworkBehaviour
 
         Debug.Log( "Client" );
     }
-
+    
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
 
-        CmdSendChatMessage( "Client " + playerControllerId + " joined chat... say hello! \n" );
+        CmdSendChatMessage( "New Client joined chat... say hello! \n" );
 
         Debug.Log( "Local Player" );
     }
@@ -57,21 +50,14 @@ public class PlayerChat : NetworkBehaviour
         }
     }
 
-    [CommandAttribute]
+    [Command]
     private void CmdSendChatMessage( string inMessage )
     {
         if ( !string.IsNullOrEmpty( inMessage ) )
         {
             chat.CreateChatEntry( inMessage, playerColor );
-            //RpcReceiveMessage( inMessage, playerColor );
 
             Debug.Log( "Received Message " + inMessage );
         }
-    }
-
-    [ClientRpcAttribute]
-    private void RpcReceiveMessage( string inMessage, Color inPlayerColor )
-    {
-        chat.CreateChatEntry( inMessage, playerColor );
     }
 }
